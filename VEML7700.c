@@ -9,58 +9,101 @@
 #include <linux/i2c-dev.h> // struct i2c_msg
 #include <linux/i2c.h> // struct i2c_rdwr_ioctl_data
 
-int main()
+int fd_i2c = -1; // i2c bus file descriptor
+const char *i2c_bus = "/dev/apalis-i2c1";
+unsigned char slave_address = 0x10;
+
+
+int i2c_init(void)
 {
-    struct i2c_msg msg[2];
-    unsigned char num_byte = 2;
-    unsigned char num_msg = 2;
-
- 
-    //transfer data buffer
-    unsigned char transfer_buffer[2];
-    transfer_buffer[0]=0x00;
-    transfer_buffer[1]=0x00;
-
-    //receive data buffer
-    unsigned char receive_buffer[2];
-    receive_buffer[0]=0x00;
-    receive_buffer[1]=0x00;
-
-
-    //transfer msg
-    msg[0].addr = 0x00;
-    msg[0].flags = 0; //flag 0 for write
-    msg[0].len = num_byte;
-    msg[0].buf = transfer_buffer;
-
-
-    // receive msg
-    msg[1].addr = 0x04;
-    msg[1].flags = I2C_M_RD;
-    msg[1].len = num_byte;
-    msg[1].buf = receive_buffer;
-
-    struct i2c_rdwr_ioctl_data tranfer_data;
-    tranfer_data.msgs = msg;
-    tranfer_data.nmsgs = num_msg;
-    
-    
-
-    // Open file descriptor to I2C bus
-    int file = open("/dev/apalis-i2c1",O_RDWR);
-    if(file<0) {
-    printf("Failed to open apalis-i2c1.");
-    return -1;
-    }
-    // With our file descriptor, perform I2C message transfers
-    int result = ioctl(file,I2C_RDWR,&tranfer_data);
-    if(result < 0)
+    if ((fd_i2c = open(i2c_bus, O_RDWR)) < 0)
     {
-    printf("ioctl error: %s\n", strerror(errno));
-    return -1;
+        printf("Failed to open apalis-i2c1.");
+        return -1;
     }
-    
-    close(file);
+    return fd_i2c;
+}
+
+void i2c_close(void) 
+{
+    close(fd_i2c);
+}
+
+// Write to an I2C slave device's register:
+int i2c_write(unsigned char slave_addr, unsigned char reg, unsigned char low_byte, unsigned char high_byte )
+{
+    struct i2c_msg msgs[1];
+    struct i2c_rdwr_ioctl_data msgset[1];
+
+    unsigned char outbuf[3];
+
+    outbuf[0] = reg;
+    outbuf[1] = low_byte;
+    outbuf[2] = high_byte;
+
+    msgs[0].addr = slave_addr;
+    msgs[0].flags = 0;// 0 for write 
+    msgs[0].len = 3;
+    msgs[0].buf = outbuf;
+
+    msgset[0].msgs = msgs;
+if (ioctl(fd_i2c, I2C_RDWR, &msgset) < 0) {
+        perror("ioctl(I2C_RDWR) in i2c_write");
+        return -1;
+    }
 
     return 0;
-} 
+}
+
+// Read the given I2C slave device's register and return the read value in `*result`:
+__uint16_t i2c_read(unsigned char slave_addr, unsigned char reg) 
+{
+    unsigned char outbuf[1];
+    unsigned char inbuf[2];
+
+    outbuf[0]=reg;
+    inbuf[0] = 0;
+    inbuf[1] = 0;
+
+
+    struct i2c_msg msgs[2];
+    struct i2c_rdwr_ioctl_data msgset[1];
+
+    msgs[0].addr = slave_addr;
+    msgs[0].flags = 0;
+    msgs[0].len = 1;
+    msgs[0].buf = outbuf;
+
+    msgs[1].addr = slave_addr;
+    msgs[1].flags = I2C_M_RD;
+    msgs[1].len = 2;
+    msgs[1].buf = inbuf;
+
+    msgset[0].msgs = msgs;
+    msgset[0].nmsgs = 2;
+
+    if (ioctl(fd_i2c, I2C_RDWR, &msgset) < 0) {
+        perror("ioctl(I2C_RDWR) in i2c_read");
+        return -1;
+    }
+    __uint16_t reg_value = inbuf[1]*256 + inbuf[0] ;
+    return reg_value;
+}
+
+
+int main()
+{
+    i2c_init();
+
+    i2c_write(0x10, 0x00, 0x00, 0x00 );//writing configuration register
+
+
+    __uint16_t reg_value = i2c_read(slave_address, 0x04);//reading result register
+
+    float Lux = reg_value * 0.0576 ; // gain = 1 and integration time = 100ms multiplication factor = 0.0576
+
+    printf("Lux : %.2f\n",Lux);
+    i2c_close();
+    return 0;
+}
+
