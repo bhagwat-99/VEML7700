@@ -29,6 +29,7 @@ void i2c_close(void)
     close(fd_i2c);
 }
 
+
 // Write to an I2C slave device's register:
 int i2c_write(unsigned char slave_addr, unsigned char reg, unsigned char low_byte, unsigned char high_byte )
 {
@@ -47,13 +48,16 @@ int i2c_write(unsigned char slave_addr, unsigned char reg, unsigned char low_byt
     msgs[0].buf = outbuf;
 
     msgset[0].msgs = msgs;
-if (ioctl(fd_i2c, I2C_RDWR, &msgset) < 0) {
+    msgset[0].nmsgs = 1;
+
+    if (ioctl(fd_i2c, I2C_RDWR, &msgset) < 0) {
         perror("ioctl(I2C_RDWR) in i2c_write");
         return -1;
     }
 
     return 0;
 }
+
 
 // Read the given I2C slave device's register and return the read value in `*result`:
 __uint16_t i2c_read(unsigned char slave_addr, unsigned char reg) 
@@ -97,7 +101,6 @@ int main()
 
     i2c_write(0x10, 0x00, 0x00, 0x00 );//writing configuration register
 
-
     __uint16_t reg_value = i2c_read(slave_address, 0x04);//reading result register
 
     float Lux = reg_value * 0.0576 ; // gain = 1 and integration time = 100ms multiplication factor = 0.0576
@@ -106,4 +109,3 @@ int main()
     i2c_close();
     return 0;
 }
-
