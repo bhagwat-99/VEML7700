@@ -105,7 +105,7 @@ int main()
 
     float Lux = reg_value * 0.0576 ; // gain = 1 and integration time = 100ms multiplication factor = 0.0576
 
-    printf("Lux : %.2f Lux \n",Lux);
+    printf("Light Intensity : %.2f Lux \n",Lux);
     i2c_close();
     return 0;
 }
