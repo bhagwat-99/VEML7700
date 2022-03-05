@@ -101,6 +101,8 @@ int main()
 
     i2c_write(0x10, 0x00, 0x00, 0x00 );//writing configuration register
 
+    sleep(1);
+
     __uint16_t reg_value = i2c_read(slave_address, 0x04);//reading result register
 
     float Lux = reg_value * 0.0576 ; // gain = 1 and integration time = 100ms multiplication factor = 0.0576
