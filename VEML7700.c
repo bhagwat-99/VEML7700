@@ -1,9 +1,6 @@
 #include "VEML7700.h"
 
-
-
-
-int write_to_file()
+int write_to_file(float Lux)
 {
     FILE *fptr;
     while(1)
@@ -13,12 +10,12 @@ int write_to_file()
         //check if file opened successfully
         if(fptr == NULL)
         {
-                printf("ERROR!");
+                printf("Error opening the file /tmp/light_intensity");
                 return -1;
         }
 
         // gain = 1 and integration time = 100ms multiplication factor = 0.0576
-        float Lux = (float)read_light_intensity() * 0.0576;
+        //float Lux = (float)read_light_intensity() * 0.0576;
         
         
         //writing light intensity to file
@@ -33,7 +30,7 @@ int write_to_file()
     return 0;
 }
 
-void configure()
+int configure()
 {
     //writing 0x0000 to the configuration register i.e 0x00 
 
@@ -42,7 +39,12 @@ void configure()
     reg_data[0] = 0x00;
     reg_data[1] = 0x00;
     uint8_t n_bytes = 2;
-    i2c_write(SLAVE_ADDR, reg_addr ,reg_data, n_bytes);
+    uint8_t ret_val = i2c_write(SLAVE_ADDR, reg_addr ,reg_data, n_bytes);
+    if(ret_val < 0)
+    {
+        printf("Fail to configure light sensor \n");
+        return -1;
+    }
 }
 
 uint16_t read_light_intensity()
@@ -51,6 +53,11 @@ uint16_t read_light_intensity()
     uint8_t reg_addr = ALS_REG;
     uint8_t n_bytes = 2;
     uint8_t * p_ret_val = i2c_read(SLAVE_ADDR, reg_addr,n_bytes);
+    if(p_ret_val == NULL)
+    {
+        printf("Fail to read light intensity\n");
+        return NULL;
+    }
     return ((uint16_t)(*(p_ret_val+1)) << 8 | *p_ret_val);
     
 }

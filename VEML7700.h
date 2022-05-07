@@ -12,8 +12,8 @@ typedef unsigned char uint8_t;
 
 #define CONF_REG 0x00
 
-void configure();
-int write_to_file();
+int configure();
+int write_to_file(float Lux);
 uint16_t read_light_intensity();
 
  
