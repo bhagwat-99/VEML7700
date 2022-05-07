@@ -1,34 +1,6 @@
 #include "VEML7700.h"
 
-int write_to_file(float Lux)
-{
-    FILE *fptr;
-    while(1)
-    { 
-        //opening the file
-        fptr = fopen("/tmp/light_intensity","w");
-        //check if file opened successfully
-        if(fptr == NULL)
-        {
-                printf("Error opening the file /tmp/light_intensity");
-                return -1;
-        }
-
-        // gain = 1 and integration time = 100ms multiplication factor = 0.0576
-        //float Lux = (float)read_light_intensity() * 0.0576;
-        
-        
-        //writing light intensity to file
-        if(fprintf(fptr,"Light Intensity : %0.2f Lux\n",Lux )<0)
-        {   
-                printf("error writing temperature to file \n");     
-        }
-
-        fclose(fptr);
-        sleep(10);
-    }
-    return 0;
-}
+// configuring the sensor
 
 int configure()
 {
@@ -61,4 +33,33 @@ uint16_t read_light_intensity()
     return ((uint16_t)(*(p_ret_val+1)) << 8 | *p_ret_val);
     
 }
+
+
+int write_to_file(float Lux)
+{
+    FILE *fptr;
+    while(1)
+    { 
+        //opening the file
+        fptr = fopen(RAM_FILE_PATH,FILE_OPEN_MODE);
+
+        //check if file opened successfully
+        if(fptr == NULL)
+        {
+                printf("Error opening the file /tmp/light_intensity");
+                return -1;
+        }
+        
+        //writing light intensity to file
+        if(fprintf(fptr,"Light Intensity : %0.2f Lux\n",Lux )<0)
+        {   
+                printf("error writing temperature to file \n");     
+        }
+
+        fclose(fptr);
+        sleep(10);
+    }
+    return 0;
+}
+
 

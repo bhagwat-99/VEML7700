@@ -7,9 +7,10 @@ int fd_i2c = -1;
 //char array to store read value
 unsigned char i2c_data[35];
 
-
-// i2c initialize
-//i2c_bus - i2c adapter
+/*
+i2c initialize
+i2c_bus - i2c adapter
+*/
 int i2c_init(const char *i2c_bus)
 {
     if ((fd_i2c = open(i2c_bus, O_RDWR)) < 0)
@@ -20,9 +21,10 @@ int i2c_init(const char *i2c_bus)
     return 0;
 }
 
-
-// close the i2c bus
-//i2c_bus - i2c adaper 
+/*
+close the i2c bus
+i2c_bus - i2c adaper
+*/
 int i2c_close(const char *i2c_bus) 
 {
     if (close(fd_i2c) < 0)
@@ -32,7 +34,6 @@ int i2c_close(const char *i2c_bus)
     }
     return 0;
 }
-
 
 
 // Write to an I2C slave device's register:

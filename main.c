@@ -17,19 +17,18 @@ int main()
 		return -1;
 	}
 
-	// float Lux = (float)read_light_intensity() * 0.0576;
-	// printf("Lux : %.2f\n",Lux);
+	// gain = 1 and integration time = 100ms multiplication factor = 0.0576
 
 	// read light intensity
 	float Lux = (float)read_light_intensity() * 0.0576;
 
 	//write Lux value to ram file
-    write_to_file(Lux);
+	write_to_file(Lux);
     
 	// close the i2c bus
-    if(i2c_close(i2c_bus)<0)
+	if(i2c_close(i2c_bus)<0)
 	{
 		return -1;
 	}
-    return 0;
+	return 0;
 }

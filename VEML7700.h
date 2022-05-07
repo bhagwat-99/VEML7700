@@ -7,15 +7,22 @@
 typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 
-#define SLAVE_ADDR      0x10
-#define ALS_REG         0x04;
+#define SLAVE_ADDR      0x10    // 7bit address last bit reserved for read/write
+#define ALS_REG         0x04    // Lux value stored in this register
 
-#define CONF_REG 0x00
+#define CONF_REG 0x00           // configuration register
 
+#define RAM_FILE_PATH   "/tmp/light_intensity"
+
+#define FILE_OPEN_MODE  "w"     //write mode - overwrite or create new file
+
+// sensor configuration
 int configure();
-int write_to_file(float Lux);
+
 uint16_t read_light_intensity();
 
- 
+// write light intensity value to ram file
+int write_to_file(float Lux);
+
 
 #endif
