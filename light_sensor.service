@@ -13,7 +13,7 @@ StartLimitBurst=2
 
 
 [Service]
-ExecStart=/home/root/bhagwatws/light_intensity
+ExecStart=/usr/sbin/sensor_code/light_intensity
 Restart=on-failure
 
 
