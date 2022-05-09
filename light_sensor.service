@@ -1,0 +1,21 @@
+/*      @author         Bhagwat Shinde
+        name            light_sensor.service
+        Description     write light_intensity to the ram file /tmp/light_intensity
+        date            09 May 2022
+        How to use      Enable the service
+*/
+
+
+[unit]
+Description= Execute light sensor code
+StartLimitIntervalSec=30
+StartLimitBurst=2
+
+
+[Service]
+ExecStart=/home/root/bhagwatws/light_intensity
+Restart=on-failure
+
+
+[Install]
+WantedBy=multi-user.target

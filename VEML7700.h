@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "I2C.h"
 
+
 typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 
@@ -19,7 +20,8 @@ typedef unsigned char uint8_t;
 // sensor configuration
 int configure();
 
-uint16_t read_light_intensity();
+int read_light_intensity();
+
 
 // write light intensity value to ram file
 int write_to_file(float Lux);

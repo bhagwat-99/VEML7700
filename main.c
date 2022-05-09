@@ -12,18 +12,34 @@ int main()
 		return -1;
 	}
 
-	if(configure()<0)
+	if(configure() == -1)
 	{
 		return -1;
 	}
 
 	// gain = 1 and integration time = 100ms multiplication factor = 0.0576
 
-	// read light intensity
-	float Lux = (float)read_light_intensity() * 0.0576;
+	while(1)
+	{
+		// read light intensity
+		int ret_val = read_light_intensity();
+		if(ret_val == -1)
+		{
+			return -1;
+		}
 
-	//write Lux value to ram file
-	write_to_file(Lux);
+		float Lux = (float)ret_val * 0.0576;
+
+		//write Lux value to ram file
+		ret_val = write_to_file(Lux);
+		if(ret_val == -1)
+		{
+			return -1;
+		}
+		sleep(10);
+	}
+
+	
     
 	// close the i2c bus
 	if(i2c_close(i2c_bus)<0)
