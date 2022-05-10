@@ -1,8 +1,10 @@
 #ifndef VEML7700_H
 #define VEML7700_H
 
+
 #include <stdio.h>
 #include "I2C.h"
+#include <stdlib.h>
 
 
 typedef unsigned short uint16_t;
@@ -24,7 +26,7 @@ int read_light_intensity();
 
 
 // write light intensity value to ram file
-int write_to_file(float Lux);
+int write_to_file(float Lux, int mode);
 
 
 #endif

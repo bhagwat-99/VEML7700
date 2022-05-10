@@ -35,7 +35,7 @@ int read_light_intensity()
 }
 
 
-int write_to_file(float Lux)
+int write_to_file(float Lux, int mode)
 {
     FILE *fptr;
     
@@ -60,6 +60,11 @@ int write_to_file(float Lux)
     {
         printf("Error closing file : /tmp/light_intensity");
         return -1;
+    }
+    
+
+    if (mode == 2){
+        exit(0);
     }
     return 0;
 }

@@ -4,7 +4,7 @@
 
 const char *i2c_bus = "/dev/apalis-i2c1";
 
-int main()
+int main(int argc, char *argv[])
 {
 	//i2c initialize
 	if(i2c_init(i2c_bus) < 0)
@@ -31,7 +31,7 @@ int main()
 		float Lux = (float)ret_val * 0.0576;
 
 		//write Lux value to ram file
-		ret_val = write_to_file(Lux);
+		ret_val = write_to_file(Lux, argc);
 		if(ret_val == -1)
 		{
 			return -1;
