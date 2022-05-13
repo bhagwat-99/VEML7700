@@ -1,14 +1,14 @@
-
-[unit]
-Description= Execute light sensor code
+[Unit]
+Description=Execute light sensor code
+After=devdetect.service
+Requires=devdetect.service
 StartLimitIntervalSec=30
 StartLimitBurst=2
 
-
 [Service]
-ExecStart=/usr/sbin/sensor_code/light_intensity
+ExecStart=/usr/sbin/light/light_intensity
 Restart=on-failure
-
 
 [Install]
 WantedBy=multi-user.target
+
