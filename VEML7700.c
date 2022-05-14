@@ -50,7 +50,7 @@ int write_to_file(float Lux, int mode)
     }
     
     //writing light intensity to file
-    if(fprintf(fptr,"Light Intensity : %0.2f Lux\n",Lux )<0)
+    if(fprintf(fptr,"Light_Intensity:%0.2f\n",Lux )<0)
     {   
             printf("error writing temperature to file \n");
             return -1;     
