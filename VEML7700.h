@@ -15,7 +15,7 @@ typedef unsigned char uint8_t;
 
 #define CONF_REG 0x00           // configuration register
 
-#define RAM_FILE_PATH   "/tmp/light_intensity"
+#define RAM_FILE_PATH   "/var/tmp/light_intensity"
 
 #define FILE_OPEN_MODE  "w"     //write mode - overwrite or create new file
 
