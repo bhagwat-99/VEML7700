@@ -51,6 +51,7 @@ int write_to_file(float Lux, int mode)
             exit(1);
     }
     
+    
     if(fprintf(fptr,DATA_OUT_FORMAT, Lux)<0)
     {
             printf("Error :  light intensity - write to file \n");

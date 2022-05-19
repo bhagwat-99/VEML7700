@@ -14,6 +14,7 @@
 #include <linux/i2c.h> // struct i2c_rdwr_ioctl_data
 
 
+
 //i2c initilize
 int i2c_init(const char *i2c_bus);
 
