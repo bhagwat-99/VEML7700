@@ -1,5 +1,6 @@
 {
         "files.associations": {
                 "veml7700.h": "c"
-        }
+        },
+        "C_Cpp.errorSquiggles": "Disabled"
 }
